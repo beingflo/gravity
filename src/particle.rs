@@ -1,9 +1,6 @@
 use nannou::prelude::*;
 use nannou::draw::Draw;
 
-use arena::MAX_SPEED;
-use arena::MAX_FORCE;
-
 #[derive(Clone)]
 pub struct Particle {
     id: u32,
@@ -29,71 +26,32 @@ impl Particle {
     pub fn draw(&self, draw: &Draw) {
         const RADIUS: f32 = 3.0;
 
-        draw.ellipse().xy(self.pos).radius(RADIUS).color(BLACK);
+        draw.ellipse().resolution(10).xy(self.pos).radius(RADIUS).color(BLACK);
     }
 
-    fn wrap_pos(&mut self, width: f32, height: f32) {
-        if self.pos.x > width / 2.0 {
-            self.pos.x -= width;
-        }
-        if self.pos.x < -width / 2.0 {
-            self.pos.x += width;
-        }
-
-        if self.pos.y > height / 2.0 {
-            self.pos.y -= height;
-        }
-        if self.pos.y < -height / 2.0 {
-            self.pos.y += height;
-        }
-    }
-
-    fn distance_squared(&self, other: &Particle, width: f32, height: f32) -> f32 {
-        let x_dist_direct = (self.pos.x - other.pos.x).abs();
-        let x_dist_indirect = width - (self.pos.x - other.pos.x).abs();
-
-        let x_min = x_dist_direct.min(x_dist_indirect);
-
-        let y_dist_direct = (self.pos.y - other.pos.y).abs();
-        let y_dist_indirect = height - (self.pos.y - other.pos.y).abs();
-
-        let y_min = y_dist_direct.min(y_dist_indirect);
-
-        x_min*x_min + y_min*y_min
-
-    }
-
-    pub fn update(&mut self, neighbors: &[Particle], width: f32, height: f32) {
+    pub fn update(&mut self, neighbors: &[Particle]) {
         let mut force = Vector2::new(0.0, 0.0);
-        let gravity_coeff = 1.0;
-        let eps = 0.1;
+
+        // Not realistic
+        let g = 5000.0;
+
+        let eps = 5.0;
 
         for p in neighbors {
             if p.id == self.id {
                 continue;
             }
 
-            //let distance = self.distance_squared(p, width, height);
-            let mut distance = (self.pos.x - p.pos.x).abs().powi(2) + (self.pos.y - p.pos.y).abs().powi(2);
-
-            if distance < eps {
-                distance = eps;
-            }
-
-            force += (p.pos - self.pos).normalize() / distance;
+            let diff = self.pos - p.pos;
+            let r2 = (diff.x * diff.x) + (diff.y * diff.y);
+            force += -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
         }
 
-        self.accel += force.normalize() * gravity_coeff;
+        self.accel = force;
     }
 
-    pub fn step(&mut self, dt: f32, width: f32, height: f32) {
-        self.accel = self.accel.limit_magnitude(MAX_FORCE);
-
+    pub fn step(&mut self, dt: f32) {
         self.vel += self.accel*dt;
-        //self.vel = self.vel.limit_magnitude(MAX_SPEED);
-
         self.pos += self.vel*dt;
-
-        //self.wrap_pos(width, height);
     }
 }

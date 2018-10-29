@@ -3,8 +3,7 @@ use nannou::draw::Draw;
 
 use particle::Particle;
 
-pub const MAX_SPEED: f32 = 50.0;
-pub const MAX_FORCE: f32 = 100.0;
+//pub const MAX_SPEED: f32 = 5.0;
 
 pub struct Arena {
     agents: Vec<Particle>,
@@ -34,6 +33,10 @@ impl Arena {
 
         agent.set_pos(x, y);
 
+        //let v_x = (random_f32() * MAX_SPEED) - (MAX_SPEED / 2.0);
+        //let v_y = (random_f32() * MAX_SPEED) - (MAX_SPEED / 2.0);
+
+        //let vel = Vector2::new(v_x, v_y);
         let vel = Vector2::new(0.0, 0.0);
 
         agent.set_vel(vel);
@@ -51,14 +54,14 @@ impl Arena {
         let agents_copy = self.agents.clone();
 
         for a in &mut self.agents {
-            a.update(&agents_copy, self.width, self.height);
+            a.update(&agents_copy);
         }
     }
 
 
     pub fn step(&mut self, dt: f32) {
         for a in &mut self.agents {
-            a.step(dt, self.width, self.height);
+            a.step(dt);
         }
     }
 

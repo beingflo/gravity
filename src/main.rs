@@ -31,7 +31,7 @@ fn model(app: &App) -> Model {
 
     let mut arena = Arena::new(width, height);
 
-    for _ in 0..2000 {
+    for _ in 0..1000 {
         arena.add_particle();
     }
 

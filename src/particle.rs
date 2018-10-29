@@ -27,7 +27,7 @@ impl Particle {
     }
 
     pub fn draw(&self, draw: &Draw) {
-        const RADIUS: f32 = 2.0;
+        const RADIUS: f32 = 3.0;
 
         draw.ellipse().xy(self.pos).radius(RADIUS).color(BLACK);
     }
@@ -64,16 +64,36 @@ impl Particle {
     }
 
     pub fn update(&mut self, neighbors: &[Particle], width: f32, height: f32) {
+        let mut force = Vector2::new(0.0, 0.0);
+        let gravity_coeff = 1.0;
+        let eps = 0.1;
+
+        for p in neighbors {
+            if p.id == self.id {
+                continue;
+            }
+
+            //let distance = self.distance_squared(p, width, height);
+            let mut distance = (self.pos.x - p.pos.x).abs().powi(2) + (self.pos.y - p.pos.y).abs().powi(2);
+
+            if distance < eps {
+                distance = eps;
+            }
+
+            force += (p.pos - self.pos).normalize() / distance;
+        }
+
+        self.accel += force.normalize() * gravity_coeff;
     }
 
     pub fn step(&mut self, dt: f32, width: f32, height: f32) {
         self.accel = self.accel.limit_magnitude(MAX_FORCE);
 
         self.vel += self.accel*dt;
-        self.vel = self.vel.limit_magnitude(MAX_SPEED);
+        //self.vel = self.vel.limit_magnitude(MAX_SPEED);
 
         self.pos += self.vel*dt;
 
-        self.wrap_pos(width, height);
+        //self.wrap_pos(width, height);
     }
 }

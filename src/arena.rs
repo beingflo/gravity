@@ -34,10 +34,7 @@ impl Arena {
 
         agent.set_pos(x, y);
 
-        let v_x = (random_f32() * MAX_SPEED) - (MAX_SPEED / 2.0);
-        let v_y = (random_f32() * MAX_SPEED) - (MAX_SPEED / 2.0);
-
-        let vel = Vector2::new(v_x, v_y);
+        let vel = Vector2::new(0.0, 0.0);
 
         agent.set_vel(vel);
 
@@ -51,6 +48,11 @@ impl Arena {
     }
 
     pub fn update(&mut self) {
+        let agents_copy = self.agents.clone();
+
+        for a in &mut self.agents {
+            a.update(&agents_copy, self.width, self.height);
+        }
     }
 
 

@@ -27,12 +27,9 @@ impl Particle {
     }
 
     pub fn draw(&self, draw: &Draw) {
-        const RADIUS: f32 = 5.0;
-        const LENGTH: f32 = 12.0;
-        const WIDTH: f32 = 1.5;
+        const RADIUS: f32 = 2.0;
 
         draw.ellipse().xy(self.pos).radius(RADIUS).color(BLACK);
-        draw.line().start(self.pos).end(self.pos + (self.vel.normalize() * LENGTH)).thickness(WIDTH).caps_round().color(BLACK);
     }
 
     fn wrap_pos(&mut self, width: f32, height: f32) {

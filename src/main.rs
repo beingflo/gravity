@@ -1,6 +1,6 @@
 extern crate nannou;
 
-mod agent;
+mod particle;
 mod arena;
 
 use nannou::prelude::*;
@@ -32,7 +32,7 @@ fn model(app: &App) -> Model {
     let mut arena = Arena::new(width, height);
 
     for _ in 0..200 {
-        arena.add_agent();
+        arena.add_particle();
     }
 
     Model { arena: arena, ui: ui, fps_id: fps_id, ui_last_update: 0.0 }

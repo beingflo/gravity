@@ -1,13 +1,13 @@
 use nannou::prelude::*;
 use nannou::draw::Draw;
 
-use agent::Agent;
+use particle::Particle;
 
 pub const MAX_SPEED: f32 = 50.0;
 pub const MAX_FORCE: f32 = 100.0;
 
 pub struct Arena {
-    agents: Vec<Agent>,
+    agents: Vec<Particle>,
 
     width: f32,
     height: f32,
@@ -25,8 +25,8 @@ impl Arena {
         self.height = size.y;
     }
 
-    pub fn add_agent(&mut self) {
-        let mut agent = Agent::new(self.id_counter);
+    pub fn add_particle(&mut self) {
+        let mut agent = Particle::new(self.id_counter);
         self.id_counter += 1;
 
         let x = (random_f32() * self.width) - (self.width / 2.0);
@@ -51,11 +51,6 @@ impl Arena {
     }
 
     pub fn update(&mut self) {
-        let agents_copy = self.agents.clone();
-
-        for a in &mut self.agents {
-            a.update(&agents_copy, self.width, self.height);
-        }
     }
 
 

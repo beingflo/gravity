@@ -46,6 +46,10 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
             model.ui.update(dt);
         },
 
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::Tab)), .. } => {
+            model.ui.toggle_console();
+        },
+
         Event::WindowEvent { simple: Some(SimpleWindowEvent::Resized(size)), .. } => {
             model.arena.update_size(size);
         },

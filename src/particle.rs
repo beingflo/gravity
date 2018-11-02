@@ -6,23 +6,14 @@ use camera::Camera;
 #[derive(Clone)]
 pub struct Particle {
     id: u32,
-    pos: Point2,
+    pos: Vector2,
     vel: Vector2,
     accel: Vector2,
 }
 
 impl Particle {
-    pub fn new(id: u32) -> Self {
-        Self { id: id, pos: Point2::new(0.0, 0.0), vel: Vector2::new(0.0, 0.0), accel: Vector2::new(0.0, 0.0) }
-    }
-
-    pub fn set_pos(&mut self, x: f32, y: f32) {
-        self.pos.x = x;
-        self.pos.y = y;
-    }
-
-    pub fn set_vel(&mut self, vel: Vector2) {
-        self.vel = vel;
+    pub fn new(id: u32, pos: Vector2, vel: Vector2) -> Self {
+        Self { id: id, pos: pos, vel: vel, accel: Vector2::new(0.0, 0.0) }
     }
 
     pub fn draw(&self, draw: &Draw, camera: &Camera) {

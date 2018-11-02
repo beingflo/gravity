@@ -20,6 +20,15 @@ impl Arena {
         Arena { agents: Vec::new(), width: width, height: height, id_counter: 0 }
     }
 
+    pub fn uniform(mut self, n: u32) -> Self {
+        for _ in 0..n {
+            self.add_particle();
+        }
+
+        self
+    }
+
+
     pub fn update_size(&mut self, size: Vector2) {
         self.width = size.x;
         self.height = size.y;

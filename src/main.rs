@@ -32,11 +32,7 @@ fn model(app: &App) -> Model {
 
     let fps_id = ui.generate_widget_id();
 
-    let mut arena = Arena::new(width, height);
-
-    for _ in 0..1000 {
-        arena.add_particle();
-    }
+    let arena = Arena::new(width, height).uniform(1000);
 
     Model { arena: arena, camera: Camera::new(), ui: ui, fps_id: fps_id, ui_last_update: 0.0 }
 }

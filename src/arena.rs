@@ -29,6 +29,20 @@ impl Arena {
         self
     }
 
+    pub fn big_bang(mut self, n: u32) -> Self {
+        for _ in 0..n {
+            let side = self.width.min(self.height);
+            let width = side * 0.1;
+            let height = side * 0.1;
+            let x = (random_f32() * width) - (width / 2.0);
+            let y = (random_f32() * height) - (height / 2.0);
+
+            self.add_particle(Vector2::new(x,y), Vector2::new(0.0, 0.0));
+        }
+
+        self
+    }
+
     pub fn update_size(&mut self, size: Vector2) {
         self.width = size.x;
         self.height = size.y;

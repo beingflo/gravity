@@ -1,6 +1,8 @@
 use nannou::prelude::*;
 use nannou::draw::Draw;
 
+use camera::Camera;
+
 #[derive(Clone)]
 pub struct Particle {
     id: u32,
@@ -23,10 +25,12 @@ impl Particle {
         self.vel = vel;
     }
 
-    pub fn draw(&self, draw: &Draw) {
+    pub fn draw(&self, draw: &Draw, camera: &Camera) {
         const RADIUS: f32 = 3.0;
 
-        draw.ellipse().resolution(10).xy(self.pos).radius(RADIUS).color(BLACK);
+        let pos = (self.pos + camera.lookat) * camera.zoom;
+        let radius = RADIUS * camera.zoom;
+        draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
     }
 
     pub fn update(&mut self, neighbors: &[Particle]) {

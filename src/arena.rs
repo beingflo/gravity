@@ -2,6 +2,7 @@ use nannou::prelude::*;
 use nannou::draw::Draw;
 
 use particle::Particle;
+use camera::Camera;
 
 //pub const MAX_SPEED: f32 = 5.0;
 
@@ -44,9 +45,9 @@ impl Arena {
         self.agents.push(agent);
     }
 
-    pub fn draw(&self, draw: &Draw) {
+    pub fn draw(&self, draw: &Draw, camera: &Camera) {
         for a in &self.agents {
-            a.draw(draw);
+            a.draw(draw, camera);
         }
     }
 

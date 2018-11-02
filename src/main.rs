@@ -2,12 +2,14 @@ extern crate nannou;
 
 mod particle;
 mod arena;
+mod camera;
 
 use nannou::prelude::*;
 use nannou::ui::prelude::*;
 use nannou::event::SimpleWindowEvent;
 
 use arena::Arena;
+use camera::Camera;
 
 fn main() {
     nannou::app(model, event, view).run();
@@ -15,6 +17,7 @@ fn main() {
 
 struct Model {
     arena: Arena,
+    camera: Camera,
 
     ui: Ui,
     fps_id: widget::Id,
@@ -35,11 +38,13 @@ fn model(app: &App) -> Model {
         arena.add_particle();
     }
 
-    Model { arena: arena, ui: ui, fps_id: fps_id, ui_last_update: 0.0 }
+    Model { arena: arena, camera: Camera::new(), ui: ui, fps_id: fps_id, ui_last_update: 0.0 }
 }
 
 fn event(_: &App, mut model: Model, event: Event) -> Model {
     let ui_update_interval = 0.5;
+
+    model.camera.handle_event(&event);
 
     match event {
         Event::Update(update) => {
@@ -66,9 +71,11 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
 
 
         },
+
         Event::WindowEvent { simple: Some(SimpleWindowEvent::Resized(size)), .. } => {
             model.arena.update_size(size);
         },
+
         _ => (),
     }
     model
@@ -78,7 +85,7 @@ fn view(app: &App, model: &Model, frame: Frame) -> Frame {
     let draw = app.draw();
     draw.background().color(WHITE);
 
-    model.arena.draw(&draw);
+    model.arena.draw(&draw, &model.camera);
 
     draw.to_frame(app, &frame).unwrap();
     model.ui.draw_to_frame(app, &frame).unwrap();

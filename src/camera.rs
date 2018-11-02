@@ -7,11 +7,12 @@ pub struct Camera {
 
     last_press: Option<Vector2>,
     pos: Vector2,
+    pub following: Option<usize>,
 }
 
 impl Camera {
     pub fn new() -> Self {
-        Camera { lookat: Vector2::new(0.0, 0.0), zoom: 1.0, last_press: None, pos: Vector2::new(0.0, 0.0) }
+        Camera { lookat: Vector2::new(0.0, 0.0), zoom: 1.0, last_press: None, pos: Vector2::new(0.0, 0.0), following: None }
     }
 
     pub fn handle_event(&mut self, event: &Event) {
@@ -26,7 +27,7 @@ impl Camera {
                 self.pos = *pos;
 
                 if let Some(pos) = self.last_press {
-                    self.lookat += (self.pos - pos) * (1.0 / self.zoom);
+                    self.lookat += (pos - self.pos) * (1.0 / self.zoom);
                     self.last_press = Some(self.pos);
                 }
             },
@@ -43,5 +44,9 @@ impl Camera {
 
             _ => (),
         }
+    }
+
+    pub fn follow(&mut self, pos: Vector2) {
+        self.lookat = pos;
     }
 }

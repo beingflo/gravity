@@ -35,6 +35,10 @@ fn model(app: &App) -> Model {
 }
 
 fn event(_: &App, mut model: Model, event: Event) -> Model {
+    if let Some(id) = model.camera.following {
+        model.camera.follow(model.arena.particles[id].pos);
+    }
+
     model.camera.handle_event(&event);
 
     match event {
@@ -48,6 +52,26 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
 
         Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::Tab)), .. } => {
             model.ui.toggle_console();
+        },
+
+        // Follow a particle
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::F)), .. } => {
+            if model.camera.following.is_none() {
+                let mut min_dist = std::f32::MAX;
+                let mut min_idx = 0;
+                for (i, p) in model.arena.particles.iter().enumerate() {
+                    let diff = p.pos - model.camera.lookat;
+                    let dist = diff.x * diff.x + diff.y * diff.y;
+                    if dist < min_dist {
+                        min_dist = dist;
+                        min_idx = i;
+                    }
+                }
+
+                model.camera.following = Some(min_idx);
+            } else {
+                model.camera.following = None;
+            }
         },
 
         Event::WindowEvent { simple: Some(SimpleWindowEvent::Resized(size)), .. } => {

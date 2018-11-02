@@ -5,8 +5,8 @@ use camera::Camera;
 
 #[derive(Clone)]
 pub struct Particle {
-    id: u32,
-    pos: Vector2,
+    pub id: u32,
+    pub pos: Vector2,
     vel: Vector2,
     accel: Vector2,
 }
@@ -19,7 +19,7 @@ impl Particle {
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
         const RADIUS: f32 = 3.0;
 
-        let pos = (self.pos + camera.lookat) * camera.zoom;
+        let pos = (self.pos - camera.lookat) * camera.zoom;
         let radius = RADIUS * camera.zoom;
         draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
     }

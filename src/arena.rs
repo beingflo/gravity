@@ -5,7 +5,7 @@ use particle::Particle;
 use camera::Camera;
 
 pub struct Arena {
-    particles: Vec<Particle>,
+    pub particles: Vec<Particle>,
 
     width: f32,
     height: f32,
@@ -64,6 +64,7 @@ impl Arena {
     pub fn update(&mut self) {
         let agents_copy = self.particles.clone();
 
+        // TODO make this O(nlogn)
         for a in &mut self.particles {
             a.update(&agents_copy);
         }

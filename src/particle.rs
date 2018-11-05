@@ -20,7 +20,7 @@ impl Particle {
         const RADIUS: f32 = 3.0;
 
         let pos = (self.pos - camera.lookat) * camera.zoom;
-        let radius = (RADIUS * camera.zoom).max(0.5);
+        let radius = (RADIUS * camera.zoom).max(1.0);
         draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
     }
 

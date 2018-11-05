@@ -4,6 +4,7 @@ mod particle;
 mod arena;
 mod camera;
 mod ui;
+mod barneshut;
 
 use nannou::prelude::*;
 use nannou::event::SimpleWindowEvent;

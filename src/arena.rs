@@ -18,17 +18,6 @@ impl Arena {
         Arena { particles: Vec::new(), width: width, height: height, id_counter: 0 }
     }
 
-    pub fn uniform(mut self, n: u32) -> Self {
-        for _ in 0..n {
-            let x = (random_f32() * self.width) - (self.width / 2.0);
-            let y = (random_f32() * self.height) - (self.height / 2.0);
-
-            self.add_particle(Vector2::new(x,y), Vector2::new(0.0, 0.0));
-        }
-
-        self
-    }
-
     pub fn big_bang(mut self, n: u32) -> Self {
         for _ in 0..n {
             let side = self.width.min(self.height);

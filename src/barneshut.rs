@@ -134,7 +134,7 @@ fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right
     let ll_rel = (lower_left - camera.lookat) * camera.zoom;
     let lr_rel = (lower_right - camera.lookat) * camera.zoom;
 
-    let thickness = (5.0 * camera.zoom).max(2.0);
+    let thickness = (2.0 * camera.zoom).max(1.0);
 
     draw.line().start(ul_rel).end(ur_rel).thickness(thickness).caps_round().color(GREEN);
     draw.line().start(ur_rel).end(lr_rel).thickness(thickness).caps_round().color(GREEN);

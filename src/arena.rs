@@ -21,7 +21,13 @@ impl Arena {
         Arena { particles: Vec::new(), width: width, height: height, vel_indicator: false, accel_indicator: false, id_counter: 0 }
     }
 
-    pub fn big_bang(mut self, n: u32) -> Self {
+    pub fn reset(&mut self) {
+        let n = self.particles.len();
+        self.particles.clear();
+        self.big_bang(n);
+    }
+
+    pub fn big_bang(&mut self, n: usize) {
         for _ in 0..n {
             let r = random_f32() * 10000.0;
             let r = r.sqrt();
@@ -32,8 +38,6 @@ impl Arena {
 
             self.add_particle(Vector2::new(x,y), Vector2::new(-y * 3.0, x * 3.0));
         }
-
-        self
     }
 
     pub fn update_size(&mut self, size: Vector2) {

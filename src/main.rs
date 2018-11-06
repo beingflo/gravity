@@ -30,7 +30,8 @@ fn model(app: &App) -> Model {
     let ui = app.new_ui().build().unwrap();
     let ui = UserInterface::new(ui);
 
-    let arena = Arena::new(width, height).big_bang(1000);
+    let mut arena = Arena::new(width, height);
+    arena.big_bang(1000);
 
     Model { arena: arena, camera: Camera::new(), ui: ui }
 }
@@ -73,6 +74,10 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
             } else {
                 model.camera.following = None;
             }
+        },
+
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::R)), .. } => {
+            model.arena.reset();
         },
 
         Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::V)), .. } => {

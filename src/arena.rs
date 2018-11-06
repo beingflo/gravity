@@ -36,7 +36,7 @@ impl Arena {
             let x = r * theta.sin();
             let y = r * theta.cos();
 
-            self.add_particle(Vector2::new(x,y), Vector2::new(-y * 3.0, x * 3.0));
+            self.add_particle(Vector2::new(x,y), Vector2::new(-y * 5.0, x * 5.0));
         }
     }
 

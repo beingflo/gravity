@@ -13,18 +13,24 @@ pub struct Arena {
     vel_indicator: bool,
     accel_indicator: bool,
 
+    freeze: bool,
+
     id_counter: u32,
 }
 
 impl Arena {
     pub fn new(width: f32, height: f32) -> Self {
-        Arena { particles: Vec::new(), width: width, height: height, vel_indicator: false, accel_indicator: false, id_counter: 0 }
+        Arena { particles: Vec::new(), width: width, height: height, vel_indicator: false, accel_indicator: false, freeze: false, id_counter: 0 }
     }
 
     pub fn reset(&mut self) {
         let n = self.particles.len();
         self.particles.clear();
         self.big_bang(n);
+    }
+
+    pub fn toggle_freeze(&mut self) {
+        self.freeze = !self.freeze;
     }
 
     pub fn big_bang(&mut self, n: usize) {
@@ -77,6 +83,10 @@ impl Arena {
 
 
     pub fn step(&mut self, dt: f32) {
+        if self.freeze {
+            return;
+        }
+
         for a in &mut self.particles {
             a.step(dt);
         }

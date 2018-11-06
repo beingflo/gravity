@@ -80,6 +80,10 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
             model.arena.reset();
         },
 
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::Space)), .. } => {
+            model.arena.toggle_freeze();
+        },
+
         Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::V)), .. } => {
             model.arena.toggle_velocity_indicator();
         },

@@ -93,8 +93,15 @@ impl Arena {
         self.tree = Some(tree);
 
         // TODO make this O(nlogn)
-        for a in &mut self.particles {
-            a.update(&particles_copy);
+        //for a in &mut self.particles {
+        //    a.update(&particles_copy);
+        //}
+
+        if let Some(ref tree) = self.tree {
+            for a in &mut self.particles {
+                let force = tree.compute_force(a.pos, 0.5);
+                a.accel = force;
+            }
         }
     }
 

@@ -7,8 +7,8 @@ use camera::Camera;
 pub struct Particle {
     pub id: u32,
     pub pos: Vector2,
-    vel: Vector2,
-    accel: Vector2,
+    pub vel: Vector2,
+    pub accel: Vector2,
 }
 
 impl Particle {

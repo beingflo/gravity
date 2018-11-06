@@ -48,6 +48,30 @@ impl Node {
         }
     }
 
+    pub fn compute_force(&self, point: Vector2, theta: f32) -> Vector2 {
+        let mut force = Vector2::new(0.0, 0.0);
+
+        if let Some(ref children) = self.children {
+            let side = self.upper_left.y - self.lower_right.y;
+            let diff = self.com - point;
+            let d = (diff.x * diff.x + diff.y * diff.y).sqrt();
+
+            if side / d < theta {
+                // Approximate
+                force += pair_force(point, self.com) * self.n as f32;
+            } else {
+                // Recurse
+                for q in children.iter() {
+                    force += q.compute_force(point, theta);
+                }
+            }
+        } else {
+            force += pair_force(point, self.com);
+        }
+
+        force
+    }
+
     fn create_children(&mut self) {
         assert!(self.children.is_none());
 
@@ -123,6 +147,25 @@ pub fn construct_tree(points: &[Particle]) -> Node {
     }
 
     tree
+}
+
+fn pair_force(a: Vector2, b: Vector2) -> Vector2 {
+    let mut force = Vector2::new(0.0, 0.0);
+
+    // Not realistic
+    let g = 5000.0;
+
+    let eps = 5.0;
+
+    //if a.x == b.x && a.y == b.y {
+    //    return force;
+    //}
+
+    let diff = a - b;
+    let r2 = (diff.x * diff.x) + (diff.y * diff.y);
+    force = -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
+
+    force
 }
 
 fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right: Vector2) {

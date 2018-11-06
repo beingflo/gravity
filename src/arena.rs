@@ -23,13 +23,14 @@ impl Arena {
 
     pub fn big_bang(mut self, n: u32) -> Self {
         for _ in 0..n {
-            let side = self.width.min(self.height);
-            let width = side * 0.1;
-            let height = side * 0.1;
-            let x = (random_f32() * width) - (width / 2.0);
-            let y = (random_f32() * height) - (height / 2.0);
+            let r = random_f32() * 10000.0;
+            let r = r.sqrt();
+            let theta = random_f32() * 2.0 * std::f32::consts::PI;
 
-            self.add_particle(Vector2::new(x,y), Vector2::new(0.0, 0.0));
+            let x = r * theta.sin();
+            let y = r * theta.cos();
+
+            self.add_particle(Vector2::new(x,y), Vector2::new(-y * 3.0, x * 3.0));
         }
 
         self

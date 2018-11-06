@@ -3,9 +3,11 @@ use nannou::draw::Draw;
 
 use particle::Particle;
 use camera::Camera;
+use barneshut::BarnesHut;
 
 pub struct Arena {
     pub particles: Vec<Particle>,
+    tree: Option<BarnesHut>,
 
     width: f32,
     height: f32,
@@ -20,7 +22,7 @@ pub struct Arena {
 
 impl Arena {
     pub fn new(width: f32, height: f32) -> Self {
-        Arena { particles: Vec::new(), width: width, height: height, vel_indicator: false, accel_indicator: false, freeze: false, id_counter: 0 }
+        Arena { particles: Vec::new(), tree: None, width: width, height: height, vel_indicator: false, accel_indicator: false, freeze: false, id_counter: 0 }
     }
 
     pub fn reset(&mut self) {
@@ -67,17 +69,24 @@ impl Arena {
     }
 
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
+        if let Some(ref tree) = self.tree {
+            tree.draw(draw, camera);
+        }
+
         for a in &self.particles {
             a.draw(draw, camera, self.vel_indicator, self.accel_indicator);
         }
     }
 
     pub fn update(&mut self) {
-        let agents_copy = self.particles.clone();
+        let particles_copy = self.particles.clone();
+
+        let tree = BarnesHut::new(&particles_copy[..]);
+        self.tree = Some(tree);
 
         // TODO make this O(nlogn)
         for a in &mut self.particles {
-            a.update(&agents_copy);
+            a.update(&particles_copy);
         }
     }
 

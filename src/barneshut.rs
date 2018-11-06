@@ -4,15 +4,10 @@ use nannou::draw::Draw;
 use particle::Particle;
 use camera::Camera;
 
-enum Node {
-    Quadrants(Box<BarnesHut>, Box<BarnesHut>, Box<BarnesHut>, Box<BarnesHut>),
-    Single(Vector2),
-    Empty,
-}
+#[derive(Copy, Clone)]
+enum Quadrant { UL, UR, LL, LR }
 
-
-pub struct BarnesHut {
-    children: Node,
+pub struct Node {
     upper_left: Vector2,
     lower_right: Vector2,
 
@@ -20,33 +15,114 @@ pub struct BarnesHut {
     com: Vector2,
     // Number of points
     n: usize,
+
+    children: Option<Box<[Node; 4]>>,
 }
 
-impl BarnesHut {
-    pub fn new(points: &[Particle]) -> Self {
-        let mut tree = BarnesHut { children: Node::Empty, upper_left: Vector2::new(0.0, 0.0), lower_right: Vector2::new(0.0, 0.0), com: Vector2::new(0.0, 0.0), n: points.len() };
+impl Node {
+    pub fn new(upper_left: Vector2, lower_right: Vector2) -> Self {
+        Node { upper_left: upper_left, lower_right: lower_right, com: Vector2::new(0.0, 0.0), n: 0, children: None }
+    }
 
-        let mut x_max = points[0].pos.x;
-        let mut x_min = points[0].pos.x;
-        let mut y_max = points[0].pos.y;
-        let mut y_min = points[0].pos.y;
+    fn insert(&mut self, point: Vector2) {
+        if self.children.is_some() {
+            self.add_mass(point);
+            let quadrant = self.get_quadrant(point);
+            if let Some(ref mut children) = self.children {
+                children[quadrant as usize].insert(point);
+            }
+        } else {
+            if self.n == 0 {
+                self.add_mass(point);
+            } else {
+                let old_com = self.com;
 
-        for p in points {
-            x_max = p.pos.x.max(x_max);
-            x_min = p.pos.x.min(x_min);
-            y_max = p.pos.y.max(y_max);
-            y_min = p.pos.y.min(y_min);
+                self.com = Vector2::new(0.0, 0.0);
+                self.n = 0;
+
+                self.create_children();
+                self.insert(old_com);
+                self.insert(point);
+            }
+
         }
+    }
 
-        tree.upper_left = Vector2::new(x_min, y_max);
-        tree.lower_right = Vector2::new(x_max, y_min);
+    fn create_children(&mut self) {
+        assert!(self.children.is_none());
 
-        tree
+        let mid_x = (self.upper_left.x + self.lower_right.x) / 2.0;
+        let mid_y = (self.upper_left.y + self.lower_right.y) / 2.0;
+
+        self.children = Some(Box::new([
+            Node::new(self.upper_left, Vector2::new(mid_x, mid_y)), // UL
+            Node::new(Vector2::new(mid_x, self.upper_left.y), Vector2::new(self.lower_right.x, mid_y)), // UR
+            Node::new(Vector2::new(self.upper_left.x, mid_y), Vector2::new(mid_x, self.lower_right.y)), // LL
+            Node::new(Vector2::new(mid_x, mid_y), self.lower_right)  // LR
+        ]));
+
+    }
+
+    fn get_quadrant(&self, point: Vector2) -> Quadrant {
+        let mid_x = (self.upper_left.x + self.lower_right.x) / 2.0;
+        let mid_y = (self.upper_left.y + self.lower_right.y) / 2.0;
+
+        if point.x > mid_x {
+            if point.y > mid_y {
+                Quadrant::UR
+            } else {
+                Quadrant::LR
+            }
+        } else {
+            if point.y > mid_y {
+                Quadrant::UL
+            } else {
+                Quadrant::LL
+            }
+        }
+    }
+
+    fn add_mass(&mut self, point: Vector2) {
+        if self.n == 0 {
+            self.com = point;
+            self.n += 1;
+        } else {
+            self.com = (self.com * self.n as f32 + point) / (self.n as f32 + 1.0);
+            self.n += 1;
+        }
     }
 
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
         draw_rectangle(draw, camera, self.upper_left, self.lower_right);
+
+        if let Some(ref children) = self.children {
+            for q in children.iter() {
+                q.draw(draw, camera);
+            }
+        }
     }
+}
+
+pub fn construct_tree(points: &[Particle]) -> Node {
+    let mut x_max = points[0].pos.x;
+    let mut x_min = points[0].pos.x;
+    let mut y_max = points[0].pos.y;
+    let mut y_min = points[0].pos.y;
+
+    for p in points {
+        x_max = p.pos.x.max(x_max);
+        x_min = p.pos.x.min(x_min);
+        y_max = p.pos.y.max(y_max);
+        y_min = p.pos.y.min(y_min);
+    }
+
+    let mut tree = Node::new(Vector2::new(x_min, y_max), Vector2::new(x_max, y_min));
+
+    for p in points {
+        tree.insert(p.pos);
+    }
+
+    tree
 }
 
 fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right: Vector2) {

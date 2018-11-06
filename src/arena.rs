@@ -3,11 +3,12 @@ use nannou::draw::Draw;
 
 use particle::Particle;
 use camera::Camera;
-use barneshut::BarnesHut;
+use barneshut::Node;
+use barneshut::construct_tree;
 
 pub struct Arena {
     pub particles: Vec<Particle>,
-    tree: Option<BarnesHut>,
+    tree: Option<Node>,
 
     width: f32,
     height: f32,
@@ -81,7 +82,7 @@ impl Arena {
     pub fn update(&mut self) {
         let particles_copy = self.particles.clone();
 
-        let tree = BarnesHut::new(&particles_copy[..]);
+        let tree = construct_tree(&particles_copy[..]);
         self.tree = Some(tree);
 
         // TODO make this O(nlogn)

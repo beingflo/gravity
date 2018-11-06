@@ -92,6 +92,10 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
             model.arena.toggle_acceleration_indicator();
         },
 
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::T)), .. } => {
+            model.arena.toggle_tree_indicator();
+        },
+
         Event::WindowEvent { simple: Some(SimpleWindowEvent::Resized(size)), .. } => {
             model.arena.update_size(size);
         },

@@ -15,6 +15,7 @@ pub struct Arena {
 
     vel_indicator: bool,
     accel_indicator: bool,
+    tree_indicator: bool,
 
     freeze: bool,
 
@@ -23,7 +24,7 @@ pub struct Arena {
 
 impl Arena {
     pub fn new(width: f32, height: f32) -> Self {
-        Arena { particles: Vec::new(), tree: None, width: width, height: height, vel_indicator: false, accel_indicator: false, freeze: false, id_counter: 0 }
+        Arena { particles: Vec::new(), tree: None, width: width, height: height, vel_indicator: false, accel_indicator: false, tree_indicator: false, freeze: false, id_counter: 0 }
     }
 
     pub fn reset(&mut self) {
@@ -62,6 +63,10 @@ impl Arena {
         self.accel_indicator = !self.accel_indicator;
     }
 
+    pub fn toggle_tree_indicator(&mut self) {
+        self.tree_indicator = !self.tree_indicator;
+    }
+
     pub fn add_particle(&mut self, pos: Vector2, vel: Vector2) {
         let particle = Particle::new(self.id_counter, pos, vel);
         self.id_counter += 1;
@@ -70,8 +75,10 @@ impl Arena {
     }
 
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
-        if let Some(ref tree) = self.tree {
-            tree.draw(draw, camera);
+        if self.tree_indicator {
+            if let Some(ref tree) = self.tree {
+                tree.draw(draw, camera);
+            }
         }
 
         for a in &self.particles {

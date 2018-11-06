@@ -82,7 +82,7 @@ impl Arena {
         }
 
         for a in &self.particles {
-            a.draw(draw, camera, self.vel_indicator, self.accel_indicator);
+            a.draw(draw, camera, self.vel_indicator, self.accel_indicator, self.width, self.height);
         }
     }
 
@@ -92,17 +92,16 @@ impl Arena {
         let tree = construct_tree(&particles_copy[..]);
         self.tree = Some(tree);
 
-        // TODO make this O(nlogn)
-        //for a in &mut self.particles {
-        //    a.update(&particles_copy);
-        //}
-
-        if let Some(ref tree) = self.tree {
-            for a in &mut self.particles {
-                let force = tree.compute_force(a.pos, 0.5);
-                a.accel = force;
-            }
+        for a in &mut self.particles {
+            a.update(&particles_copy);
         }
+
+        //if let Some(ref tree) = self.tree {
+        //    for a in &mut self.particles {
+        //        let force = tree.compute_force(a.pos, 0.5);
+        //        a.accel = force;
+        //    }
+        //}
     }
 
 

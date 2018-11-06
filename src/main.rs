@@ -75,6 +75,14 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
             }
         },
 
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::V)), .. } => {
+            model.arena.toggle_velocity_indicator();
+        },
+
+        Event::WindowEvent { simple: Some(SimpleWindowEvent::KeyPressed(nannou::VirtualKeyCode::A)), .. } => {
+            model.arena.toggle_acceleration_indicator();
+        },
+
         Event::WindowEvent { simple: Some(SimpleWindowEvent::Resized(size)), .. } => {
             model.arena.update_size(size);
         },

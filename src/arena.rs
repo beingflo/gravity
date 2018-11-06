@@ -10,12 +10,15 @@ pub struct Arena {
     width: f32,
     height: f32,
 
+    vel_indicator: bool,
+    accel_indicator: bool,
+
     id_counter: u32,
 }
 
 impl Arena {
     pub fn new(width: f32, height: f32) -> Self {
-        Arena { particles: Vec::new(), width: width, height: height, id_counter: 0 }
+        Arena { particles: Vec::new(), width: width, height: height, vel_indicator: false, accel_indicator: false, id_counter: 0 }
     }
 
     pub fn big_bang(mut self, n: u32) -> Self {
@@ -37,6 +40,14 @@ impl Arena {
         self.height = size.y;
     }
 
+    pub fn toggle_velocity_indicator(&mut self) {
+        self.vel_indicator = !self.vel_indicator;
+    }
+
+    pub fn toggle_acceleration_indicator(&mut self) {
+        self.accel_indicator = !self.accel_indicator;
+    }
+
     pub fn add_particle(&mut self, pos: Vector2, vel: Vector2) {
         let particle = Particle::new(self.id_counter, pos, vel);
         self.id_counter += 1;
@@ -46,7 +57,7 @@ impl Arena {
 
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
         for a in &self.particles {
-            a.draw(draw, camera);
+            a.draw(draw, camera, self.vel_indicator, self.accel_indicator);
         }
     }
 

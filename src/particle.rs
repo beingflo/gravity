@@ -16,14 +16,20 @@ impl Particle {
         Self { id: id, pos: pos, vel: vel, accel: Vector2::new(0.0, 0.0) }
     }
 
-    pub fn draw(&self, draw: &Draw, camera: &Camera) {
+    pub fn draw(&self, draw: &Draw, camera: &Camera, vel_indicator: bool, accel_indicator: bool) {
         const RADIUS: f32 = 3.0;
 
         let pos = (self.pos - camera.lookat) * camera.zoom;
         let radius = (RADIUS * camera.zoom).max(1.0);
         draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
-        draw.line().start(pos).end(pos + (self.vel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(BLUE);
-        draw.line().start(pos).end(pos + (self.accel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(RED);
+
+        if vel_indicator {
+            draw.line().start(pos).end(pos + (self.vel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(BLUE);
+        }
+
+        if accel_indicator {
+            draw.line().start(pos).end(pos + (self.accel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(RED);
+        }
     }
 
     pub fn update(&mut self, neighbors: &[Particle]) {

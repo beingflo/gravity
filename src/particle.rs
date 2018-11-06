@@ -22,6 +22,8 @@ impl Particle {
         let pos = (self.pos - camera.lookat) * camera.zoom;
         let radius = (RADIUS * camera.zoom).max(1.0);
         draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
+        draw.line().start(pos).end(pos + (self.vel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(BLUE);
+        draw.line().start(pos).end(pos + (self.accel.normalize() * 20.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(RED);
     }
 
     pub fn update(&mut self, neighbors: &[Particle]) {

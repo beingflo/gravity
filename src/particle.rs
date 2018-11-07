@@ -38,26 +38,26 @@ impl Particle {
         }
     }
 
-    pub fn update(&mut self, neighbors: &[Particle]) {
-        let mut force = Vector2::new(0.0, 0.0);
+    //pub fn update(&mut self, neighbors: &[Particle]) {
+    //    let mut force = Vector2::new(0.0, 0.0);
 
-        // Not realistic
-        let g = 5000.0;
+    //    // Not realistic
+    //    let g = 5000.0;
 
-        let eps = 5.0;
+    //    let eps = 5.0;
 
-        for p in neighbors {
-            if p.id == self.id {
-                continue;
-            }
+    //    for p in neighbors {
+    //        if p.id == self.id {
+    //            continue;
+    //        }
 
-            let diff = self.pos - p.pos;
-            let r2 = (diff.x * diff.x) + (diff.y * diff.y);
-            force += -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
-        }
+    //        let diff = self.pos - p.pos;
+    //        let r2 = (diff.x * diff.x) + (diff.y * diff.y);
+    //        force += -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
+    //    }
 
-        self.accel = force;
-    }
+    //    self.accel = force;
+    //}
 
     pub fn step(&mut self, dt: f32) {
         self.vel += self.accel*dt;

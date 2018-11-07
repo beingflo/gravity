@@ -66,7 +66,7 @@ impl Node {
                 }
             }
         } else {
-            force += pair_force(point, self.com);
+            force += pair_force(point, self.com) * self.n as f32;
         }
 
         force
@@ -154,10 +154,6 @@ fn pair_force(a: Vector2, b: Vector2) -> Vector2 {
     let g = 5000.0;
 
     let eps = 5.0;
-
-    //if a.x == b.x && a.y == b.y {
-    //    return force;
-    //}
 
     let diff = a - b;
     let r2 = (diff.x * diff.x) + (diff.y * diff.y);

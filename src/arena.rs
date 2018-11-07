@@ -87,21 +87,19 @@ impl Arena {
     }
 
     pub fn update(&mut self) {
-        let particles_copy = self.particles.clone();
-
-        let tree = construct_tree(&particles_copy[..]);
+        let tree = construct_tree(&self.particles[..]);
         self.tree = Some(tree);
 
-        for a in &mut self.particles {
-            a.update(&particles_copy);
-        }
-
-        //if let Some(ref tree) = self.tree {
-        //    for a in &mut self.particles {
-        //        let force = tree.compute_force(a.pos, 0.5);
-        //        a.accel = force;
-        //    }
+        //for a in &mut self.particles {
+        //    a.update(&particles_copy);
         //}
+
+        if let Some(ref tree) = self.tree {
+            for a in &mut self.particles {
+                let force = tree.compute_force(a.pos, 0.2);
+                a.accel = force;
+            }
+        }
     }
 
 

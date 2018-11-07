@@ -116,12 +116,12 @@ impl Node {
         }
     }
 
-    pub fn draw(&self, draw: &Draw, camera: &Camera) {
-        draw_rectangle(draw, camera, self.upper_left, self.lower_right);
+    pub fn draw(&self, draw: &Draw, camera: &Camera, width: f32, height: f32) {
+        draw_rectangle(draw, camera, self.upper_left, self.lower_right, width, height);
 
         if let Some(ref children) = self.children {
             for q in children.iter() {
-                q.draw(draw, camera);
+                q.draw(draw, camera, width, height);
             }
         }
     }
@@ -150,8 +150,6 @@ pub fn construct_tree(points: &[Particle]) -> Node {
 }
 
 fn pair_force(a: Vector2, b: Vector2) -> Vector2 {
-    let mut force = Vector2::new(0.0, 0.0);
-
     // Not realistic
     let g = 5000.0;
 
@@ -163,12 +161,19 @@ fn pair_force(a: Vector2, b: Vector2) -> Vector2 {
 
     let diff = a - b;
     let r2 = (diff.x * diff.x) + (diff.y * diff.y);
-    force = -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
+    let force = -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
 
     force
 }
 
-fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right: Vector2) {
+fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right: Vector2, width: f32, height: f32) {
+    let ul = camera.lookat + Vector2::new(-width / 2.0, height / 2.0) / camera.zoom;
+    let lr = camera.lookat + Vector2::new(width / 2.0, -height / 2.0) / camera.zoom;
+
+    if upper_left.x > lr.x || ul.x > lower_right.x || upper_left.y < lr.y || ul.y < lower_right.y {
+        return;
+    }
+
     let upper_right = Vector2::new(lower_right.x, upper_left.y);
     let lower_left = Vector2::new(upper_left.x, lower_right.y);
 

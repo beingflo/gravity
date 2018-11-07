@@ -77,7 +77,7 @@ impl Arena {
     pub fn draw(&self, draw: &Draw, camera: &Camera) {
         if self.tree_indicator {
             if let Some(ref tree) = self.tree {
-                tree.draw(draw, camera);
+                tree.draw(draw, camera, self.width, self.height);
             }
         }
 

@@ -29,11 +29,11 @@ impl Particle {
             draw.ellipse().resolution(10).xy(pos).radius(radius).color(BLACK);
 
             if vel_indicator {
-                draw.line().start(pos).end(pos + (self.vel.normalize() * 15.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(BLUE);
+                draw.line().start(pos).end(pos + (self.vel.normalize() * self.vel.magnitude().log(2.0) * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(BLUE);
             }
 
             if accel_indicator {
-                draw.line().start(pos).end(pos + (self.accel.normalize() * 15.0 * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(RED);
+                draw.line().start(pos).end(pos + (self.accel.normalize() * self.accel.magnitude().log(2.0) * camera.zoom)).thickness(1.0 * camera.zoom).caps_round().color(RED);
             }
         }
     }

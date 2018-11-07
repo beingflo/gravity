@@ -28,4 +28,5 @@ Press ```t``` to toggle visualization of the Barnes-Hut tree that is used for ap
 ![screenshot](assets/tree.png)
 
 Press ```Space``` to freeze and unfreeze the simulation.
+
 Press ```r``` to reset the simulation to its initial state.

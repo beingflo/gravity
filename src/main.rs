@@ -47,6 +47,9 @@ fn event(_: &App, mut model: Model, event: Event) -> Model {
         Event::Update(update) => {
             let dt = update.since_last.secs() as f32;
 
+            // Don't let slow framerate mess up the simulation
+            let dt = dt.min(1.0 / 60.0);
+
             model.arena.step(dt);
             model.arena.update();
             model.ui.update(dt);

@@ -174,6 +174,11 @@ fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right
         return;
     }
 
+    if !((upper_left.x > ul.x && upper_left.x < lr.x) || (lower_right.x > ul.x && lower_right.x < lr.x) ||
+         (upper_left.y > lr.y && upper_left.y < ul.y) || (lower_right.y > lr.y && lower_right.y < ul.y)) {
+        return;
+    }
+
     let upper_right = Vector2::new(lower_right.x, upper_left.y);
     let lower_left = Vector2::new(upper_left.x, lower_right.y);
 

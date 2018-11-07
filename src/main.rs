@@ -24,7 +24,7 @@ struct Model {
 }
 
 fn model(app: &App) -> Model {
-    let _ = app.new_window().with_title("Flocking").build().unwrap();
+    let _ = app.new_window().with_title("Gravity").build().unwrap();
     let (width, height) = app.main_window().inner_size_points();
 
     let ui = app.new_ui().build().unwrap();

@@ -11,7 +11,7 @@ cargo run --release
 ```
 
 ### Control
-Click and drag the mouse to view around, use your mousewheel to zoom in and out.
+Click and drag the mouse to look around, use your mousewheel to zoom in and out.
 
 Press ```f``` to toggle following the particle that is most central to your viewpoint right now.
 ![screenshot](assets/follow.png)

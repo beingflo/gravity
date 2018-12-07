@@ -33,7 +33,7 @@ fn model(app: &App) -> Model {
     let mut arena = Arena::new(width, height);
     arena.big_bang(1000);
 
-    Model { arena: arena, camera: Camera::new(), ui: ui }
+    Model { arena, camera: Camera::new(), ui }
 }
 
 fn event(_: &App, mut model: Model, event: Event) -> Model {

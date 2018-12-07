@@ -24,7 +24,7 @@ pub struct Arena {
 
 impl Arena {
     pub fn new(width: f32, height: f32) -> Self {
-        Arena { particles: Vec::new(), tree: None, width: width, height: height, vel_indicator: false, accel_indicator: false, tree_indicator: false, freeze: false, id_counter: 0 }
+        Arena { particles: Vec::new(), tree: None, width, height, vel_indicator: false, accel_indicator: false, tree_indicator: false, freeze: false, id_counter: 0 }
     }
 
     pub fn reset(&mut self) {

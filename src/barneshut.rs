@@ -21,7 +21,7 @@ pub struct Node {
 
 impl Node {
     pub fn new(upper_left: Vector2, lower_right: Vector2) -> Self {
-        Node { upper_left: upper_left, lower_right: lower_right, com: Vector2::new(0.0, 0.0), n: 0, children: None }
+        Node { upper_left, lower_right, com: Vector2::new(0.0, 0.0), n: 0, children: None }
     }
 
     fn insert(&mut self, point: Vector2) {
@@ -31,20 +31,17 @@ impl Node {
             if let Some(ref mut children) = self.children {
                 children[quadrant as usize].insert(point);
             }
+        } else if self.n == 0 {
+            self.add_mass(point);
         } else {
-            if self.n == 0 {
-                self.add_mass(point);
-            } else {
-                let old_com = self.com;
+            let old_com = self.com;
 
-                self.com = Vector2::new(0.0, 0.0);
-                self.n = 0;
+            self.com = Vector2::new(0.0, 0.0);
+            self.n = 0;
 
-                self.create_children();
-                self.insert(old_com);
-                self.insert(point);
-            }
-
+            self.create_children();
+            self.insert(old_com);
+            self.insert(point);
         }
     }
 
@@ -97,12 +94,10 @@ impl Node {
             } else {
                 Quadrant::LR
             }
+        } else if point.y > mid_y {
+            Quadrant::UL
         } else {
-            if point.y > mid_y {
-                Quadrant::UL
-            } else {
-                Quadrant::LL
-            }
+            Quadrant::LL
         }
     }
 
@@ -157,9 +152,8 @@ fn pair_force(a: Vector2, b: Vector2) -> Vector2 {
 
     let diff = a - b;
     let r2 = (diff.x * diff.x) + (diff.y * diff.y);
-    let force = -(diff / (r2 + eps).powf(3.0 / 2.0)) * g;
 
-    force
+    -(diff / (r2 + eps).powf(3.0 / 2.0)) * g
 }
 
 fn draw_rectangle(draw: &Draw, camera: &Camera, upper_left: Vector2, lower_right: Vector2, width: f32, height: f32) {

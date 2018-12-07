@@ -13,7 +13,7 @@ pub struct Particle {
 
 impl Particle {
     pub fn new(id: u32, pos: Vector2, vel: Vector2) -> Self {
-        Self { id: id, pos: pos, vel: vel, accel: Vector2::new(0.0, 0.0) }
+        Self { id, pos, vel, accel: Vector2::new(0.0, 0.0) }
     }
 
     pub fn draw(&self, draw: &Draw, camera: &Camera, vel_indicator: bool, accel_indicator: bool, viewport_width: f32, viewport_height: f32) {

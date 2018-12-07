@@ -15,7 +15,7 @@ impl UserInterface {
     pub fn new(mut ui: Ui) -> Self {
         let fps_id = ui.generate_widget_id();
         let console_id = ui.generate_widget_id();
-        UserInterface { ui: ui, fps_id: fps_id, fps_text: String::new(), console_id: console_id, console_text: String::new(), show_console: false, last_update: 0.0 }
+        UserInterface { ui, fps_id, fps_text: String::new(), console_id, console_text: String::new(), show_console: false, last_update: 0.0 }
     }
 
     pub fn toggle_console(&mut self) {
@@ -41,14 +41,14 @@ impl UserInterface {
             .set(self.fps_id, ui);
 
         if self.show_console {
-            for text in widget::TextEdit::new(&self.console_text)
+            if let Some(text) = widget::TextEdit::new(&self.console_text)
                 .left_justify()
                 .top_left_with_margin(5.0)
                 .w_h(200.0, 20.0)
                 .color(ui::Color::Rgba(0.0, 0.0, 0.0, 1.0))
                 .set(self.console_id, ui) {
 
-                self.console_text = text.into();
+                self.console_text = text;
             }
         }
     }
